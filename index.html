@@ -1,0 +1,106 @@
+```html
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚠️ هشدار ⚠️</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    background: #050000;
+    color: red;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(circle, rgba(255,0,0,0.18), transparent 45%);
+    animation: flash 0.8s infinite;
+}
+
+.box {
+    position: relative;
+    z-index: 2;
+    animation: shake 0.15s infinite;
+}
+
+h1 {
+    font-size: 70px;
+    text-shadow: 0 0 10px red, 0 0 30px darkred;
+    animation: glitch 0.4s infinite;
+}
+
+p {
+    color: white;
+    font-size: 24px;
+}
+
+.fake {
+    color: #ff0000;
+    font-size: 18px;
+    margin-top: 30px;
+}
+
+@keyframes shake {
+    0% { transform: translate(2px, 2px); }
+    50% { transform: translate(-2px, -2px); }
+    100% { transform: translate(2px, -2px); }
+}
+
+@keyframes flash {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 1; }
+}
+
+@keyframes glitch {
+    0% { transform: skew(0deg); }
+    25% { transform: skew(2deg); }
+    50% { transform: skew(-2deg); }
+    75% { transform: skew(1deg); }
+    100% { transform: skew(0deg); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+    <h1>⚠️ هک شدی! ⚠️</h1>
+    <p>سیستم شما در حال بررسی است...</p>
+    <div class="fake" id="text">
+        در حال اتصال...
+    </div>
+</div>
+
+<script>
+const messages = [
+    "در حال اتصال...",
+    "دسترسی پیدا شد...",
+    "شوخی کردم 😂😂😂",
+    "ترسیدی؟ 😈",
+    "هیچ اتفاقی نیفتاده، فقط شوخی بود 😂"
+];
+
+let i = 0;
+
+setInterval(() => {
+    document.getElementById("text").innerText = messages[i];
+    i = (i + 1) % messages.length;
+}, 1500);
+</script>
+
+</body>
+</html>
+```
