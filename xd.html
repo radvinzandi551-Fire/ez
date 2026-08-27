@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚠️ سیستم در حال بررسی</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    background: #050000;
+    color: white;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+}
+
+.start {
+    position: relative;
+    z-index: 10;
+}
+
+button {
+    padding: 15px 30px;
+    font-size: 22px;
+    border: none;
+    border-radius: 12px;
+    background: red;
+    color: white;
+    cursor: pointer;
+}
+
+.loading {
+    display: none;
+}
+
+.percent {
+    font-size: 55px;
+    color: red;
+    margin: 20px;
+}
+
+.jumpscare {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: #ff0000;
+    justify-content: center;
+    align-items: center;
+    animation: flash 0.08s infinite;
+}
+
+.jumpscare h1 {
+    font-size: 120px;
+    color: black;
+    text-shadow: 0 0 20px white;
+    animation: shake 0.05s infinite;
+}
+
+@keyframes flash {
+    0% { background: red; }
+    50% { background: black; }
+    100% { background: red; }
+}
+
+@keyframes shake {
+    0% { transform: translate(8px, -8px) rotate(-2deg); }
+    50% { transform: translate(-8px, 8px) rotate(2deg); }
+    100% { transform: translate(8px, -8px) rotate(-2deg); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="start" id="start">
+    <h1>⚠️ سیستم امنیتی</h1>
+    <p>برای شروع اسکن روی دکمه بزن</p>
+    <button onclick="startScan()">شروع اسکن</button>
+</div>
+
+<div class="loading" id="loading">
+    <h1>در حال بررسی سیستم...</h1>
+    <div class="percent" id="percent">0%</div>
+    <p id="status">در حال اتصال...</p>
+</div>
+
+<div class="jumpscare" id="jumpscare">
+    <h1>😱 BOOO! 😱</h1>
+</div>
+
+<script>
+let audioContext;
+
+function startScan() {
+    document.getElementById("start").style.display = "none";
+    document.getElementById("loading").style.display = "block";
+
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    let percent = 0;
+    const percentBox = document.getElementById("percent");
+    const status = document.getElementById("status");
+
+    const messages = [
+        "در حال اتصال...",
+        "در حال اسکن...",
+        "بررسی فایل‌ها...",
+        "بررسی امنیت...",
+        "تقریباً تمام شد..."
+    ];
+
+    const timer = setInterval(() => {
+        percent += 4;
+        percentBox.innerText = percent + "%";
+
+        if (percent >= 20) status.innerText = messages[1];
+        if (percent >= 40) status.innerText = messages[2];
+        if (percent >= 60) status.innerText = messages[3];
+        if (percent >= 80) status.innerText = messages[4];
+
+        if (percent >= 100) {
+            clearInterval(timer);
+
+            setTimeout(() => {
+                jumpScare();
+            }, 1200);
+        }
+    }, 180);
+}
+
+function jumpScare() {
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("jumpscare").style.display = "flex";
+
+    playScareSound();
+
+    setTimeout(() => {
+        document.getElementById("jumpscare").innerHTML =
+            "<h1 style='font-size:70px'>😂 گول خوردی!</h1>";
+        document.getElementById("jumpscare").style.background = "#050000";
+    }, 1800);
+}
+
+function playScareSound() {
+    const ctx = audioContext;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = "sawtooth";
+    osc.frequency.setValueAtTime(180, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.15);
+
+    gain.gain.setValueAtTime(0.001, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.8, ctx.currentTime + 0.03);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start();
+    osc.stop(ctx.currentTime + 1.2);
+}
+</script>
+
+</body>
+</html>
